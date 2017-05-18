@@ -24,6 +24,7 @@ Based on this example: https://msdn.microsoft.com/en-us/library/ff649310.aspx
 Vulnerabilities:
 - Commenting without authentication/human validation (CAPTCHA)
 - Request validation disabled => cross-site scripting (XSS)
+- SQL injection
 
 ## Web shell (cmd and PowerShell)
 Allows user run cmd/PowerShell commands on web server.
@@ -33,3 +34,16 @@ Based on this: https://github.com/fuzzdb-project/fuzzdb/blob/master/web-backdoor
 
 Vulnerabilities:
 - Run commands on server with IIS user rights.
+
+# Working with containers
+```bash
+docker build . -f Dockerfile-db -t bad/db
+docker run -d --name bad-db bad/db
+```
+
+```bash
+docker build . -f Dockerfile-web -t bad/web
+docker run -d --name bad-web bad/web
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' bad-web
+```
+
