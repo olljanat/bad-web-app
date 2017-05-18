@@ -10,6 +10,3 @@ RUN	icacls C:\inetpub\wwwroot\Data /grant IIS_IUSRS:F
 # Create local admin user
 RUN net user admin P@ssw0rd! /ADD; \
 	net localgroup Administrators admin /ADD
-	
-
-# Ton tunnuksen lukeminen serviceltä.
