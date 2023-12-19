@@ -1,0 +1,10 @@
+FROM microsoft/mssql-server-windows-express:2016-sp1
+ENV ACCEPT_EULA Y
+ENV sa_password	P@ssw0rd!
+
+COPY ["./Script.sql","/Script.sql"]
+RUN sqlcmd -S . -i C:\Script.sql
+
+# Create local admin user
+RUN net user admin P@ssw0rd! /ADD && \
+	net localgroup Administrators admin /ADD

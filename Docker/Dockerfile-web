@@ -1,0 +1,14 @@
+FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8.1
+SHELL ["powershell", "-command"]
+
+RUN c:\windows\system32\inetsrv\appcmd.exe unlock config -section:system.webServer/serverRuntime
+
+COPY ["./bad-web-app/","/inetpub/wwwroot/"]
+
+# Allow IIS write to Data folder
+RUN	icacls C:\inetpub\wwwroot\Data /grant IIS_IUSRS:F
+
+
+# Create local admin user
+RUN net user admin P@ssw0rd! /ADD; \
+	net localgroup Administrators admin /ADD

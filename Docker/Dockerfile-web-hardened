@@ -1,0 +1,15 @@
+FROM microsoft/aspnet:latest
+SHELL ["powershell", "-command"]
+
+COPY ["./bad-web-app/","/inetpub/wwwroot/"]
+
+# Allow IIS write to Data folder but prevent executing anything from there.
+RUN	icacls C:\inetpub\wwwroot\Data /grant IIS_IUSRS:F; \
+	icacls C:\inetpub\wwwroot\Data /deny IIS_IUSRS:(S,X)
+
+# Remove IIS access rights to cmd, cscript, wscript and powershell binaries
+RUN icacls C:\windows\system32\cmd.exe /deny IIS_IUSRS:F; \
+	icacls C:\windows\system32\cscript.exe /deny IIS_IUSRS:F; \
+	icacls c:\windows\system32\wscript.exe /deny IIS_IUSRS:F; \
+	takeown /F C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe; \
+	icacls C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe /deny IIS_IUSRS:F
